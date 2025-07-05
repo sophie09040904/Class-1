@@ -1,0 +1,766 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Practice Flashcards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            margin: 0;
+            padding: 5px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 95vw;
+            width: 95%;
+            min-height: 90vh;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .header-section {
+            flex-shrink: 0;
+        }
+        
+        .content-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .footer-section {
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            margin-bottom: 10px;
+        }
+        
+        .wing {
+            color: #ff6b6b;
+            font-weight: 800;
+            font-size: 1.8em;
+            letter-spacing: 1px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .sky {
+            color: #4ecdc4;
+            font-weight: 800;
+            font-size: 1.8em;
+            letter-spacing: 1px;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        .class-title {
+            font-size: 1.1em;
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            margin-top: 5px;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .topic-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .topic-button {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .topic-button.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            transform: scale(1.05);
+        }
+        
+        .topic-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .flashcard {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px 25px;
+            margin: 20px 0;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 5px solid #ff6b6b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .question-number {
+            font-size: 1.1em;
+            color: #ff6b6b;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: #fff2f2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.6;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .answer-text {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.7;
+            font-weight: 500;
+            text-align: left;
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 100%;
+        }
+        
+        .flip-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.8em;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .placeholder-text {
+            color: #999;
+            font-style: italic;
+            font-size: 1.3em;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            min-width: 120px;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button:disabled {
+            background: linear-gradient(45deg, #ccc, #999);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .previous-button {
+            background: linear-gradient(45deg, #6f42c1, #9c88ff);
+        }
+        
+        .reset-button {
+            background: linear-gradient(45deg, #6c757d, #495057);
+        }
+        
+        .stats {
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+                min-height: 85vh;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .flashcard {
+                padding: 20px 15px;
+                min-height: 350px;
+                margin: 15px 0;
+            }
+            
+            .question-text {
+                font-size: 1.1em;
+            }
+            
+            .answer-text {
+                font-size: 1em;
+                padding: 15px;
+            }
+            
+            .button {
+                padding: 12px 20px;
+                font-size: 0.9em;
+                min-width: 100px;
+            }
+            
+            .topic-button {
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo">
+                <span class="wing">WING</span> <span class="sky">SKY</span>
+            </div>
+            <div class="class-title">Sophie's Class</div>
+            <h1>🎴 Interview Practice Flashcards</h1>
+            
+            <div class="topic-selector">
+                <button class="topic-button active" onclick="selectTopic('warmup')">Warm-Up</button>
+                <button class="topic-button" onclick="selectTopic('interests')">Interests</button>
+                <button class="topic-button" onclick="selectTopic('personality')">Personality</button>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-inner" id="cardInner">
+                    <div class="card-front">
+                        <div class="placeholder-text">Select a topic and click "Next" to start!</div>
+                    </div>
+                    <div class="card-back">
+                        <div class="placeholder-text">Click the card to flip!</div>
+                    </div>
+                </div>
+                <div class="flip-hint">Click to flip</div>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <div class="button-container">
+                <button class="button previous-button" id="previousButton" onclick="showPrevious()" disabled>⬅️ Previous</button>
+                <button class="button" onclick="showNext()">➡️ Next</button>
+                <button class="button reset-button" onclick="resetPractice()">🏠 Start Over</button>
+            </div>
+            
+            <div class="stats" id="stats">
+                Choose a topic to begin practice
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const warmupQuestions = [
+            {
+                topic: "Warm-Up",
+                number: "1",
+                question: "How are you? / How do you feel? / Are you nervous?",
+                answer: "I'm so excited to be here. Thank you for giving me a chance."
+            },
+            {
+                topic: "Warm-Up",
+                number: "2",
+                question: "What time did you get up?",
+                answer: "I got up around 6 a.m."
+            },
+            {
+                topic: "Warm-Up",
+                number: "3",
+                question: "How did you feel when you woke up this morning?",
+                answer: "I was very nervous/excited."
+            },
+            {
+                topic: "Warm-Up",
+                number: "4",
+                question: "What have you done so far since this morning?",
+                answer: "I was really busy this morning. I had breakfast, put on makeup and did my hair. Then I watched the news and checked the weather today."
+            },
+            {
+                topic: "Warm-Up",
+                number: "5",
+                question: "Did you have breakfast? / What did you have for your breakfast?",
+                answer: "I had some bread with coffee/a Korean meal for breakfast. I try to eat regularly for my health.\n\nOr\n\nI usually don't skip breakfast, but I couldn't eat because I was busy and nervous this morning."
+            },
+            {
+                topic: "Warm-Up",
+                number: "6",
+                question: "Where do you live? / How long have you lived there?",
+                answer: "I've lived in Hongdae area for 2 years.\n\nOr\n\nI've lived in Cheongdam-dong since I was born."
+            },
+            {
+                topic: "Warm-Up",
+                number: "7",
+                question: "Could you tell me how to get here? / How long did it take?",
+                answer: "It took from Gangnam to Gimpo about an hour by subway. / My father drove me here."
+            },
+            {
+                topic: "Warm-Up",
+                number: "8",
+                question: "What time did you come here?",
+                answer: "I came here 2 hours ago. / I arrive here around 10 a.m."
+            },
+            {
+                topic: "Warm-Up",
+                number: "9",
+                question: "What did you do before you came in?",
+                answer: "I talked about today's interview with other candidates. We cheered each other up and said let's fly together."
+            },
+            {
+                topic: "Warm-Up",
+                number: "10",
+                question: "What are you going to do after this interview?",
+                answer: "I woke up early this morning, so I think I'll go home and take a break hoping for good news."
+            }
+        ];
+
+        const interestQuestions = [
+            {
+                topic: "Interests",
+                number: "1",
+                question: "What kind of movies do you like?",
+                answer: "I like drama movies."
+            },
+            {
+                topic: "Interests",
+                number: "2",
+                question: "What is your favorite movie?",
+                answer: "My favorite movie is The Titanic."
+            },
+            {
+                topic: "Interests",
+                number: "3",
+                question: "What is the most impressive movie to you?",
+                answer: "The most impressive movie to me is a Japanese animation titled '센과 치히로의 해방불명' in Korean. (Spirited Away or 千と千尋の神隠し)"
+            },
+            {
+                topic: "Interests",
+                number: "4",
+                question: "What movie have you watched recently?",
+                answer: "1947 보스톤(Road to Boston)\n크리에이터(The Creator)\nI recently watched a Korean movie titled '천박사 퇴마 연구소.'"
+            },
+            {
+                topic: "Interests",
+                number: "5",
+                question: "What kind of books do you like?",
+                answer: "I like books on humanities."
+            },
+            {
+                topic: "Interests",
+                number: "6",
+                question: "What is your favorite book?",
+                answer: "My favorite book is a Korean book titled '거꾸로 읽는 세계사.'"
+            },
+            {
+                topic: "Interests",
+                number: "7",
+                question: "What is the most impressive book to you?",
+                answer: "The most impressive book to me is a Japanese novel titled '나미야 잡화점의 기적' in Korean."
+            },
+            {
+                topic: "Interests",
+                number: "8",
+                question: "What book have you read recently?",
+                answer: "I recently read a Japanese novel named '도시와 그 불확실한 벽' in Korean."
+            },
+            {
+                topic: "Interests",
+                number: "9",
+                question: "What is your favorite sport?",
+                answer: "My favorite sport is baseball. I enjoy watching/playing the games."
+            },
+            {
+                topic: "Interests",
+                number: "10",
+                question: "What is your favorite drink?",
+                answer: "My favorite drink is Iced Americano."
+            },
+            {
+                topic: "Interests",
+                number: "11",
+                question: "What is your favorite food?",
+                answer: "I like 'Honey Original' from Kyochon Chicken the most. It is a crispy and flavorful fried chicken."
+            },
+            {
+                topic: "Interests",
+                number: "12",
+                question: "What can you cook well?",
+                answer: "I'm good at making budae jjigae(Korean Army Stew). It is a dish that can be made simply with kimchi and canned ham."
+            },
+            {
+                topic: "Interests",
+                number: "13",
+                question: "Who is your favorite actor or actress?",
+                answer: "My favorite actress is a Hollywood star, Angelina Jolie."
+            },
+            {
+                topic: "Interests",
+                number: "14",
+                question: "Who is your favorite singer?",
+                answer: "My favorite singer is Jimin, one of the members of the world-famous band BTS."
+            },
+            {
+                topic: "Interests",
+                number: "15",
+                question: "What kind of music do you like?",
+                answer: "I like K-pop."
+            },
+            {
+                topic: "Interests",
+                number: "16",
+                question: "What is your favorite TV program?",
+                answer: "My favorite TV program is 걸어서 세계속으로(Backpack Travels)."
+            },
+            {
+                topic: "Interests",
+                number: "17",
+                question: "What is your favorite website?",
+                answer: "My favorite website is Instagram."
+            },
+            {
+                topic: "Interests",
+                number: "18",
+                question: "What is your favorite color?",
+                answer: "My favorite color is yellowish green."
+            },
+            {
+                topic: "Interests",
+                number: "19",
+                question: "Tell me about one of your best friends.",
+                answer: "1) One of my best friends is Sarah.\n2) We went to the same middle school and high school, and we still meet at least once a month.\n3) Sarah now runs an English kindergarten, and she loves teaching children more than anyone else.\n4) We enjoy traveling and often visit temples, even though we are not Buddhists. Recently, we went to Haeinsa Temple and had a great time walking around the temple grounds."
+            },
+            {
+                topic: "Interests",
+                number: "20",
+                question: "Who do you respect besides your family members and relatives?",
+                answer: "1) I admire Yoo Hae-jin, a Korean actor. He usually appears in movies as a supporting actor, but he has a great presence.\n2) Yoo Hae-jin always does his best in his role whether it's a villain or a good guy. He is also famous for taking good care of his fellow actors.\n3) I respect him and want to become a person with a strong sense of responsibility and consideration like him."
+            }
+        ];
+
+        const personalityQuestions = [
+            {
+                topic: "Personality",
+                number: "1",
+                question: "What are your strengths? / What is your personality like?",
+                answer: "One of my strongest attributes is my strong sense of responsibility. As a flight attendant, I never missed a single flight and always completed my work before the deadline. While I sometimes felt pressured and tired, this experience made me a punctual person."
+            },
+            {
+                topic: "Personality",
+                number: "2",
+                question: "Tell me about your personality. (Organized)",
+                answer: "I am a very organized individual. I create annual, monthly, weekly, and daily plans. For instance, this year, I planned to study Japanese to communicate effortlessly with Japanese speakers, read more than two books each month, and participate in a volunteer club once a week. Although not everything goes according to plan, I always have backup plans B and C, so I do not worry too much."
+            },
+            {
+                topic: "Personality",
+                number: "3",
+                question: "What is your weakness? / Tell me one weakness of your personality.",
+                answer: "I am very curious about new or unusual things, which often leads me to spend money on unnecessary items. A few months ago, I developed an interest in tropical plants and spent over $50 on seeds, but they did not sprout in Korea. To address this weakness, I now give myself up to a week to think about any new interest before making a purchase, or I seek advice from people around me."
+            },
+            {
+                topic: "Personality",
+                number: "4",
+                question: "What is your weakness? (Difficulty saying no)",
+                answer: "One of my challenges is that I sometimes find it hard to say no because I want to maintain a positive and helpful attitude with everyone. This has occasionally led to situations where I do not have enough time for my own tasks. For instance, my manager once asked me to help with his work, and I stayed up late to complete my own. However, I am working on this by politely setting boundaries. Now, I say, 'I have something urgent to finish. Would it be okay if I help you later?' This way, I can manage my time better while still being supportive to others."
+            }
+        ];
+
+        let allQuestions = [];
+        let currentQuestions = [];
+        let currentIndex = -1;
+        let currentTopic = 'warmup';
+        let isFlipped = false;
+
+        function initializeQuestions() {
+            allQuestions = [...warmupQuestions, ...interestQuestions, ...personalityQuestions];
+            currentTopic = 'warmup';
+            currentQuestions = [...warmupQuestions];
+            
+            // Set initial active button
+            document.addEventListener('DOMContentLoaded', function() {
+                const warmupButton = document.querySelector('.topic-button');
+                if (warmupButton) {
+                    warmupButton.classList.add('active');
+                }
+            });
+            
+            resetPractice();
+        }
+
+        function selectTopic(topic) {
+            currentTopic = topic;
+            
+            // Update active button
+            document.querySelectorAll('.topic-button').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback for initialization
+                document.querySelector(`[onclick="selectTopic('${topic}')"]`).classList.add('active');
+            }
+            
+            // Set current questions based on topic
+            switch(topic) {
+                case 'warmup':
+                    currentQuestions = [...warmupQuestions];
+                    break;
+                case 'interests':
+                    currentQuestions = [...interestQuestions];
+                    break;
+                case 'personality':
+                    currentQuestions = [...personalityQuestions];
+                    break;
+            }
+            
+            resetPractice();
+        }
+
+        function playClickSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(700, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(500, audioContext.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (error) {
+                // Silent fail
+            }
+        }
+
+        function flipCard() {
+            if (currentIndex >= 0) {
+                const flashcard = document.getElementById('flashcard');
+                flashcard.classList.toggle('flipped');
+                isFlipped = !isFlipped;
+                playClickSound();
+            }
+        }
+
+        function updateButtonStates() {
+            const previousButton = document.getElementById('previousButton');
+            
+            if (currentIndex <= 0) {
+                previousButton.disabled = true;
+            } else {
+                previousButton.disabled = false;
+            }
+        }
+
+        function showNext() {
+            playClickSound();
+            
+            if (currentIndex >= currentQuestions.length - 1) {
+                alert("All cards completed! Please click 'Start Over' to restart.");
+                return;
+            }
+
+            currentIndex++;
+            displayCard();
+        }
+
+        function showPrevious() {
+            playClickSound();
+            
+            if (currentIndex <= 0) {
+                return;
+            }
+
+            currentIndex--;
+            displayCard();
+        }
+
+        function displayCard() {
+            const currentQuestion = currentQuestions[currentIndex];
+            const cardInner = document.getElementById('cardInner');
+            const flashcard = document.getElementById('flashcard');
+            
+            // Reset flip state
+            flashcard.classList.remove('flipped');
+            isFlipped = false;
+            
+            // Update card content
+            const cardFront = cardInner.querySelector('.card-front');
+            const cardBack = cardInner.querySelector('.card-back');
+            
+            cardFront.innerHTML = `
+                <div class="question-number">${currentQuestion.topic} Q${currentQuestion.number}</div>
+                <div class="question-text">${currentQuestion.question}</div>
+                <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-radius: 10px; border: 2px dashed #ffc107;">
+                    <strong>💡 Click the card to see the answer!</strong>
+                </div>
+            `;
+            
+            cardBack.innerHTML = `
+                <div class="question-number">${currentQuestion.topic} Q${currentQuestion.number}</div>
+                <div style="margin-bottom: 20px; font-weight: bold; color: #28a745;">✅ ANSWER:</div>
+                <div class="answer-text">${currentQuestion.answer.replace(/\n/g, '<br><br>')}</div>
+                <div style="margin-top: 20px; padding: 10px; background: #e3f2fd; border-radius: 8px; font-size: 0.9em; color: #1976d2;">
+                    Click again to go back to the question
+                </div>
+            `;
+            
+            updateButtonStates();
+            updateStats();
+        }
+
+        function shuffleCards() {
+            playClickSound();
+            
+            // Fisher-Yates shuffle algorithm
+            for (let i = currentQuestions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentQuestions[i], currentQuestions[j]] = [currentQuestions[j], currentQuestions[i]];
+            }
+            
+            resetPractice();
+            alert("Cards shuffled! Click 'Next' to start with the new order.");
+        }
+
+        function resetPractice() {
+            playClickSound();
+            
+            currentIndex = -1;
+            isFlipped = false;
+            
+            const cardInner = document.getElementById('cardInner');
+            const flashcard = document.getElementById('flashcard');
+            
+            flashcard.classList.remove('flipped');
+            
+            const cardFront = cardInner.querySelector('.card-front');
+            const cardBack = cardInner.querySelector('.card-back');
+            
+            cardFront.innerHTML = '<div class="placeholder-text">Click "Next" to start practice!</div>';
+            cardBack.innerHTML = '<div class="placeholder-text">Click the card to flip!</div>';
+            
+            updateButtonStates();
+            updateStats();
+        }
+
+        function updateStats() {
+            const stats = document.getElementById('stats');
+            const topicName = currentTopic.charAt(0).toUpperCase() + currentTopic.slice(1);
+            
+            if (currentIndex >= 0) {
+                const progress = currentIndex + 1;
+                stats.textContent = `${topicName} Topic • Card ${progress} of ${currentQuestions.length}`;
+            } else {
+                stats.textContent = `${topicName} Topic • ${currentQuestions.length} cards available`;
+            }
+        }
+
+        // Initialize the application
+        initializeQuestions();
+    </script>
+</body>
+</html>
